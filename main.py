@@ -27,7 +27,7 @@ con.close()
 root = tk.CTk()
 root.title("Gestionnaire de mots de passe")
 root.geometry("1000x600")
-root.resizable(False, False)
+#root.resizable(False, False)
 
 def create_cipher_key():
     original_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@._-()éàè'!/,=&#{[|^ç]°=+}²<>$*ùôûîêâ;:§?µ%£ï"
@@ -224,7 +224,7 @@ def connexion():
     cur = con.cursor()
     cur.execute("SELECT *, oid FROM iduser")
     records = cur.fetchall()
-    if entry_name.get() == "admin_Aliocha" and entry_password.get() == "admin_Aliocha76":
+    if entry_name.get() == "a" and entry_password.get() == "a":
             name.destroy()
             entry_name.destroy()
             entry_password.destroy()
@@ -311,7 +311,9 @@ def show_all():
     modif_other.grid(row = 5, column = 0, pady = 7, padx = 20, ipadx = 0)
     modif.grid(row = 6, column = 0, pady = 7, padx = 20, ipadx = 0)     
     sup.grid(row = 7, column = 0, pady = (7, 20), padx = 20, ipadx = 0)
-    myframe.grid(row = 0, column = 0, sticky = "ns", padx = 20, pady = 20, ipadx = 250, ipady = 137, rowspan = 8)
+    myframe.grid(row = 1, column = 0, sticky = "ns", padx = 20, pady = 0, ipadx = 250, ipady = 113, rowspan = 8)
+    rearsh.grid(row = 0, column = 0, sticky = "ew", padx = 20, pady = 20,)
+    
         
     refresh()
 
@@ -491,6 +493,10 @@ def modif_list():
     con.close()
     refresh()
 
+def test(aa):
+    print(rearsh.get())
+    print(aa)
+
 frame = tk.CTkFrame(root)
 name = tk.CTkLabel(frame, text = "Gestionnaire de mots de passe", font = (tk.CTkFont(size = 45)), text_color = "#96B1FF")
 entry_name = tk.CTkEntry(frame, placeholder_text="Identifiant", width = 200, height = 30)
@@ -507,21 +513,23 @@ entry_password_view.grid(row = 2, column=1, padx = 2, pady = 20, sticky = "w")
 boutton_connection.grid(row = 4, column=0, pady = 10, sticky = "e")
 error_pass.grid(row = 3, column=0, padx = 80, sticky = "e")
 
+rearsh = tk.CTkEntry(frame, placeholder_text = "Recherche site")
+rearsh.bind(sequence="a", command=test)
 myframe = ScrollableLabelButtonFrame(frame, label_text = "Mots de passe", command = scrap)
-    
+
 add_frame = CTkFrame(frame)
 modif_frame = CTkFrame(frame)
-    
+
 add_site = tk.CTkEntry(add_frame, placeholder_text = "Site")
 add_pass = tk.CTkEntry(add_frame, placeholder_text = "Mot de passe")
 add_mail = tk.CTkEntry(add_frame, placeholder_text = "Mail")
 add_other = tk.CTkEntry(add_frame, placeholder_text = "Autre")
-    
+
 modif_site = tk.CTkEntry(modif_frame, placeholder_text = "Site")
 modif_pass = tk.CTkEntry(modif_frame, placeholder_text = "Mot de passe")
 modif_mail = tk.CTkEntry(modif_frame, placeholder_text = "Mail")
 modif_other = tk.CTkEntry(modif_frame, placeholder_text = "Autre")
-    
+
 add = tk.CTkButton(add_frame, text = "Ajouter", command = add_list)
 modif = tk.CTkButton(modif_frame, text = "Modifier", command = modif_list)
 sup = tk.CTkButton(modif_frame, text = "Supprimer", command = sup_list)
