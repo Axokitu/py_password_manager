@@ -493,9 +493,8 @@ def modif_list():
     con.close()
     refresh()
 
-def test(aa):
+def test():
     print(rearsh.get())
-    print(aa)
 
 frame = tk.CTkFrame(root)
 name = tk.CTkLabel(frame, text = "Gestionnaire de mots de passe", font = (tk.CTkFont(size = 45)), text_color = "#96B1FF")
@@ -514,7 +513,7 @@ boutton_connection.grid(row = 4, column=0, pady = 10, sticky = "e")
 error_pass.grid(row = 3, column=0, padx = 80, sticky = "e")
 
 rearsh = tk.CTkEntry(frame, placeholder_text = "Recherche site")
-rearsh.bind(sequence="a", command=test)
+
 myframe = ScrollableLabelButtonFrame(frame, label_text = "Mots de passe", command = scrap)
 
 add_frame = CTkFrame(frame)
