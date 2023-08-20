@@ -27,7 +27,7 @@ con.close()
 root = tk.CTk()
 root.title("Gestionnaire de mots de passe")
 root.geometry("1000x600")
-#root.resizable(False, False)
+root.resizable(False, False)
 
 def create_cipher_key():
     original_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@._-()éàè'!/,=&#{[|^ç]°=+}²<>$*ùôûîêâ;:§?µ%£ï"
@@ -63,7 +63,6 @@ def decrypt(az):
             decrypted_message += char
     
     return decrypted_message
-
 
 class ScrollableLabelButtonFrame(tk.CTkScrollableFrame):
     def __init__(self, master, command=None, **kwargs):
@@ -224,7 +223,7 @@ def connexion():
     cur = con.cursor()
     cur.execute("SELECT *, oid FROM iduser")
     records = cur.fetchall()
-    if entry_name.get() == "a" and entry_password.get() == "a":
+    if entry_name.get() == "admin_Aliocha" and entry_password.get() == "admin_Aliocha76":
             name.destroy()
             entry_name.destroy()
             entry_password.destroy()
@@ -294,8 +293,11 @@ def refresh():
             
     con.commit()
     con.close()
-            
+
 def show_all():
+    frame.grid_columnconfigure(0, weight = 20)
+    frame.grid_columnconfigure(1, weight = 1)
+    
     add_frame.grid(row = 0, column = 2, pady = 16, rowspan = 2, )
     modif_frame.grid(row = 2, column = 2, padx = 0, rowspan = 2, )
         
@@ -311,10 +313,10 @@ def show_all():
     modif_other.grid(row = 5, column = 0, pady = 7, padx = 20, ipadx = 0)
     modif.grid(row = 6, column = 0, pady = 7, padx = 20, ipadx = 0)     
     sup.grid(row = 7, column = 0, pady = (7, 20), padx = 20, ipadx = 0)
-    myframe.grid(row = 1, column = 0, sticky = "ns", padx = 20, pady = 0, ipadx = 250, ipady = 113, rowspan = 8)
-    rearsh.grid(row = 0, column = 0, sticky = "ew", padx = 20, pady = 20,)
+    myframe.grid(row = 1, column = 0, sticky = "ew", padx = 20, pady = 0, ipadx = 250, ipady = 113, rowspan = 8, columnspan = 2)
+    rearsh.grid(row = 0, column = 0, sticky = "ew", padx = (20, 10), pady = 20,)
+    bouton_rearsh.grid(row = 0, column = 1, sticky = "ew", padx = (0, 20), pady = 20,)
     
-        
     refresh()
 
 def add_list():
@@ -358,7 +360,7 @@ def add_list():
             add_mail.configure(placeholder_text = "Mail")
             add_other.delete(0, END)
             add_other.configure(placeholder_text = "Autre")
-            refresh()
+    refresh()
 
 def scrap(ligne):
     pos1 = ligne.find("   Mot de passe : ")
@@ -413,7 +415,7 @@ def add_modif(a):
     modif_pass.configure(placeholder_text = "Mot de passe")
     modif_mail.configure(placeholder_text = "Mail")
     modif_other.configure(placeholder_text = "Autre")
-        
+
 def sup_list():
     global user_act
     con = sqlite3.connect(getRessource("base_de_donner.db"))
@@ -463,7 +465,7 @@ def sup_list():
     modif_other.delete(0, END)
     modif_other.configure(placeholder_text = "Autre")
     refresh()
-            
+
 def modif_list():
     global user_act
     con = sqlite3.connect(getRessource("base_de_donner.db"))
@@ -493,8 +495,54 @@ def modif_list():
     con.close()
     refresh()
 
-def test():
-    print(rearsh.get())
+def rearsh_site():
+    test_refresh = 0
+    if rearsh.get() == "":
+        refresh()
+    else:
+        global user_act
+        con = sqlite3.connect(getRessource("base_de_donner.db"))
+        cur = con.cursor()
+        cur.execute("SELECT *, oid FROM '"+user_act+"'")
+        records = cur.fetchall()
+        
+        for record in records:
+            record1 = list(record)
+            del record1[4]
+            if record1[2] == "":
+                if record1[3] == "":
+                    record2 = "Site : "+decrypt(record1[0])+"   Mot de passe : "+decrypt(record1[1])
+                else:
+                    record2 = "Site : "+decrypt(record1[0])+"   Mot de passe : "+decrypt(record1[1])+"   Autre : "+decrypt(record1[3])
+            else:
+                if record1[3] == "":
+                    record2 = "Site : "+decrypt(record1[0])+"   Mot de passe : "+decrypt(record1[1])+"   Mail : "+decrypt(record1[2])
+                else:
+                    record2 = "Site : "+decrypt(record1[0])+"   Mot de passe : "+decrypt(record1[1])+"   Mail : "+decrypt(record1[2])+"   Autre : "+decrypt(record1[3])
+            myframe.remove_item(record2)
+        
+        for record in records:
+            record1 = list(record)
+            del record1[4]
+            if decrypt(record1[0]).startswith(rearsh.get()):
+                if record1[2] == "":
+                    if record1[3] == "":
+                        record2 = "Site : "+decrypt(record1[0])+"   Mot de passe : "+decrypt(record1[1])
+                    else:
+                        record2 = "Site : "+decrypt(record1[0])+"   Mot de passe : "+decrypt(record1[1])+"   Autre : "+decrypt(record1[3])
+                else:
+                    if record1[3] == "":
+                        record2 = "Site : "+decrypt(record1[0])+"   Mot de passe : "+decrypt(record1[1])+"   Mail : "+decrypt(record1[2])
+                    else:
+                        record2 = "Site : "+decrypt(record1[0])+"   Mot de passe : "+decrypt(record1[1])+"   Mail : "+decrypt(record1[2])+"   Autre : "+decrypt(record1[3])
+                myframe.add_item(record2)
+                test_refresh += 1
+        
+        if test_refresh == 0:
+            refresh()
+
+        con.commit()
+        con.close()
 
 frame = tk.CTkFrame(root)
 name = tk.CTkLabel(frame, text = "Gestionnaire de mots de passe", font = (tk.CTkFont(size = 45)), text_color = "#96B1FF")
@@ -513,6 +561,7 @@ boutton_connection.grid(row = 4, column=0, pady = 10, sticky = "e")
 error_pass.grid(row = 3, column=0, padx = 80, sticky = "e")
 
 rearsh = tk.CTkEntry(frame, placeholder_text = "Recherche site")
+bouton_rearsh = tk.CTkButton(frame, text = "Recherche", command = rearsh_site)
 
 myframe = ScrollableLabelButtonFrame(frame, label_text = "Mots de passe", command = scrap)
 
