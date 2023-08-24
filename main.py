@@ -4,6 +4,9 @@ from CTkMessagebox import *
 import os
 import sqlite3
 
+admin_Pass = "a"
+admin_Use = "a"
+
 user_act = None
 check_var = 0
 
@@ -219,11 +222,13 @@ def check_box():
 
 def connexion():
     global user_act
+    global admin_Pass
+    global admin_Use
     con = sqlite3.connect(getRessource("base_de_donner.db"))
     cur = con.cursor()
     cur.execute("SELECT *, oid FROM iduser")
     records = cur.fetchall()
-    if entry_name.get() == "admin_Aliocha" and entry_password.get() == "admin_Aliocha76":
+    if entry_name.get() == admin_Use and entry_password.get() == admin_Pass:
             name.destroy()
             entry_name.destroy()
             entry_password.destroy()
